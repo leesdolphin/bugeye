@@ -55,3 +55,25 @@ Status
 This project is very much in development status. Only the brave and/or foolish
 should try to use it at this point. Assume it does an ``rm -rf /`` when you
 start it.
+
+License
+-------
+
+Bugeye is licensed under the `GNU Affero General Public License
+<http://scraper-helper.sourceforge.net/agpl-3.0.txt>`_.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+The copyright holders grant you an additional permission under Section 7 of the
+GNU Affero General Public License, version 3, exempting you from the requirement
+in Section 6 of the GNU General Public License, version 3, to accompany
+Corresponding Source with Installation Information for the Program or any work
+based on the Program. You are still required to comply with all other Section 6
+requirements to provide Corresponding Source.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
