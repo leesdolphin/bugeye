@@ -56,10 +56,12 @@ This project is very much in development status. Only the brave and/or foolish
 should try to use it at this point. Assume it does an ``rm -rf /`` when you
 start it.
 
-License
--------
+Copyright and License
+---------------------
 
-Bugeye is licensed under the `GNU Affero General Public License
+Bugeye is Copyright (C) the respective authors of the files, as noted at the top
+of each file. If not noted, it is Copyright (C) 2015 Ryan Stuart. All original
+code in Bugeye is licensed under the `GNU Affero General Public License
 <http://scraper-helper.sourceforge.net/agpl-3.0.txt>`_.
 
 This program is free software: you can redistribute it and/or modify it under
