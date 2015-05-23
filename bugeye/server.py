@@ -29,13 +29,13 @@ class LiveMixing(object):
         for room in rooms:
             if room.room.lower() == room_name:
                 response.content_type = "text/json"
-                response.body = self._room_to_json(room)
+                response.text = self._room_to_json(room)
                 return response
         # Reach here - no rooms
         response.set_status(404)
         return response
 
-    def _room_to_json(self, room: bugeye.store.Mixer):
+    def _room_to_json(self, room: Mixer):
         """
 
         :param room:
@@ -57,9 +57,10 @@ rooms = [Mixer("hi", None, None, None)]
 def init(loop):
     app = web.Application(loop=loop, middlewares=(middlewares.pretty_error,))
     assert isinstance(app.router, web.UrlDispatcher)
-    app.router.register_route(ServeStaticRoute("static", "static/", "static/"))
-    app.router.add_route('GET', '/{name}', handle)
-    app.router.add_static('static/', 'static/', )
+    app.router.register_route(ServeStaticRoute("/static", "/static/", "static/"))
+    live = LiveMixing()
+    live.init_routes(app)
+
     srv = yield from loop.create_server(app.make_handler(), '127.0.0.1', 8080)
     print("Server started at http://127.0.0.1:8080")
     return srv

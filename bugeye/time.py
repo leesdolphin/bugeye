@@ -1,6 +1,6 @@
 __author__ = 'lee'
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 def midnight_time():
     # Replace the timezone so that timestamp is between local midnight and now instead of UTC midnight and now.
