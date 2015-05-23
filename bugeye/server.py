@@ -2,7 +2,9 @@ __author__ = 'lee'
 
 import asyncio
 from aiohttp import web
-
+import json
+from bugeye.time import midnight_time
+from bugeye.store import Mixer
 import bugeye.middlewares as middlewares
 
 class ServeStaticRoute(web.StaticRoute):
@@ -11,14 +13,44 @@ class ServeStaticRoute(web.StaticRoute):
     pass
 
 
-class APIHandler(web.UrlDispatcher)
+class LiveMixing(object):
+
+    def __init__(self):
+        self._rooms = {}
+        pass
+
+    def init_routes(self, app):
+        app.router.add_route('GET', '/live/{room}/config', self.room_config_handler)
+
+    @asyncio.coroutine
+    def room_config_handler(self, request):
+        response = web.Response()
+        room_name = request.match_info["room"].lower()
+        for room in rooms:
+            if room.room.lower() == room_name:
+                response.content_type = "text/json"
+                response.body = self._room_to_json(room)
+                return response
+        # Reach here - no rooms
+        response.set_status(404)
+        return response
+
+    def _room_to_json(self, room: bugeye.store.Mixer):
+        """
+
+        :param room:
+        :type room: bugeye.store.Mixer
+        :return: A JSON string.
+        :rtype: basestring
+        """
+        config = {'room': room.room,
+                  'media': room.get_feeds(),
+                  'time': midnight_time()}
+        return json.dumps(config, indent=2, sort_keys=True)
 
 
-@asyncio.coroutine
-def handle(request):
-    name = request.match_info.get('name', "Anonymous")
-    text = "Hello, " + name
-    return web.Response(body=text.encode('utf-8'))
+
+rooms = [Mixer("hi", None, None, None)]
 
 
 @asyncio.coroutine
