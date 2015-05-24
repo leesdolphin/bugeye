@@ -56,6 +56,14 @@ This project is very much in development status. Only the brave and/or foolish
 should try to use it at this point. Assume it does an ``rm -rf /`` when you
 start it.
 
+Use
+---
+
+.. code:: console
+
+    cd bugeye
+    python server.py
+
 Copyright and License
 ---------------------
 
