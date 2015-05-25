@@ -25,7 +25,6 @@ class ServeStaticRoute(web.StaticRoute):
             url = self._prefix + filename
         return self._append_query(url, query)
 
-
 class LiveMixing(object):
 
     def __init__(self):
@@ -101,7 +100,7 @@ rooms = [Mixer("hi", None, None, None)]
 def init(loop):
     app = web.Application(loop=loop, middlewares=(middlewares.pretty_error,))
     assert isinstance(app.router, web.UrlDispatcher)
-    app.router.register_route(ServeStaticRoute("Static Content", "/static/", "bugeye/web/"))
+    app.router.register_route(ServeStaticRoute("Static Content", "/static/", "bugeye/static/"))
     live = LiveMixing()
     live.init_routes(app)
 
