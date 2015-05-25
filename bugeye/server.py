@@ -73,8 +73,15 @@ class LiveMixing(object):
         if room is None:
             response.set_status(404)
         else:
-            talk_id = 
-
+            try:
+                talk_id = response.POST['talk-id']
+                talk_start = response.POST['talk-begin']
+                talk_end = response.POST['talk-end']
+                title = response.POST['title']
+                presenter = response.POST['presenter']
+                comments = response.POST['comments']
+            except KeyError as e:
+                raise web.HTTPBadRequest() from e
 
 
         return response
@@ -94,7 +101,7 @@ rooms = [Mixer("hi", None, None, None)]
 def init(loop):
     app = web.Application(loop=loop, middlewares=(middlewares.pretty_error,))
     assert isinstance(app.router, web.UrlDispatcher)
-    app.router.register_route(ServeStaticRoute("/static", "/static/", "static/"))
+    app.router.register_route(ServeStaticRoute("Static Content", "/static/", "bugeye/web/"))
     live = LiveMixing()
     live.init_routes(app)
 
