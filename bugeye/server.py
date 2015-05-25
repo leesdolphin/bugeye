@@ -9,46 +9,83 @@ import bugeye.middlewares as middlewares
 
 class ServeStaticRoute(web.StaticRoute):
     ## TODO: Handle loading files from inside packaged file.
-    ## TODO: Handle providing index.html at /
-    pass
+
+    def match(self, path):
+        if path in ['/', '/index.html']:
+            return {'filename': 'index.html'}
+        else:
+            return super().match(path)
+
+    def url(self, *, filename, query=None):
+        while filename.startswith('/'):
+            filename = filename[1:]
+        if filename in ['/', '/index.html']:
+            url = '/'
+        else:
+            url = self._prefix + filename
+        return self._append_query(url, query)
 
 
 class LiveMixing(object):
 
     def __init__(self):
-        self._rooms = {}
+        self._rooms = []
         pass
 
     def init_routes(self, app):
         app.router.add_route('GET', '/live/{room}/config', self.room_config_handler)
+        app.router.add_route('GET', '/live/{room}/mix', self.change_mixer)
 
     @asyncio.coroutine
     def room_config_handler(self, request):
         response = web.Response()
-        room_name = request.match_info["room"].lower()
-        for room in rooms:
-            if room.room.lower() == room_name:
-                response.content_type = "text/json"
-                response.text = self._room_to_json(room)
-                return response
-        # Reach here - no rooms
-        response.set_status(404)
+        room = self.getRoom(request.match_info["room"])
+        if room is None:
+            response.set_status(404)
+        else:
+            response.content_type = "application/json"
+
+            config = {'room': room.room,
+                      'media': room.get_feeds(),
+                      'time': midnight_time()}
+            response.text = json.dumps(config, indent=2, sort_keys=True)
+            return response
         return response
 
-    def _room_to_json(self, room: Mixer):
-        """
+    @asyncio.coroutine
+    def change_mixer(self, request):
+        response = web.Response()
+        room = self.getRoom(request.match_info["room"])
+        if room is None:
+            response.set_status(404)
+        else:
+            room.set_mix({
+                "audio": request.GET.get("audio", 0),
+                "video": request.GET.get("video", 0),
+                "pip": request.GET.get("pip", 0),
+            });
+        return response
 
-        :param room:
-        :type room: bugeye.store.Mixer
-        :return: A JSON string.
-        :rtype: basestring
-        """
-        config = {'room': room.room,
-                  'media': room.get_feeds(),
-                  'time': midnight_time()}
-        return json.dumps(config, indent=2, sort_keys=True)
+    @asyncio.coroutine
+    def set_notes(self, request):
+        response = web.Response()
+        room = self.getRoom(request.match_info["room"])
+        if room is None:
+            response.set_status(404)
+        else:
+            talk_id = 
 
 
+
+        return response
+
+    def getRoom(self, name):
+        print("Searching for", name)
+        room_name = name.lower()
+        for room in rooms:
+            if room.room.lower() == room_name:
+                return room
+        return None
 
 rooms = [Mixer("hi", None, None, None)]
 
