@@ -127,8 +127,10 @@ class Streaming(object):
         print("Testing Stream: ", request, " || ", content_type, encoding)
         response.enable_chunked_encoding()
         response.content_type = content_type
+        response.
         response.start(request)
         yield from self.stream_file(open("bugeye/video.mp4", 'rb'), response, chunk_size)
+        yield from response.write_eof()
         return response
 
     @asyncio.coroutine
