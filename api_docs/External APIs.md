@@ -1,6 +1,6 @@
 These APIs are written on the following assumptions:
  - The server can serve multiple rooms.
-
+ - All streams are accessible to all rooms, it's up to the UI to hide the irrelevant ones.
 
 All endpoints should support CORS and `OPTIONS` requests. All GET requests
 should support HEAD requests also.
@@ -42,22 +42,26 @@ All streams are named using a unique string. A 'stream' object contains the foll
 This means that **GET** `/streams` will respond with:
 ```json
 {
-  "hallway-camera": {
+  "Hallway Camera": {
+    "name": "Hallway Camera",
     "stream_url": "http://bugeye.server/streaming/hallway-camera.webm",
     "origin": "raw",
     "type": "av"
   },
-  "room1-camera": {
+  "Room 1 - Camera": {
+    "name": "Room 1 - Camera",
     "stream_url": "http://room1-camera.server/stream.webm",
     "origin": "raw",
     "type": "av"
   },
-  "room1-screen": {
+  "Room 1 - Screen": {
+    "name": "Room 1 - Screen",
     "stream_url": "http://bugeye.server/streaming/room1-screen.webm",
     "origin": "raw",
     "type": "video"
   },
-  "room1-output": {
+  "Room 1 - Output": {
+    "name": "Room 1 - Output",
     "stream_url": "http://bugeye.server/streaming/mixed/room1-output.webm",
     "origin": "mixed",
     "type": "av"
@@ -90,7 +94,7 @@ This means that **GET** `/rooms` will respond with:
   "Breakout Room 1(Level 2)": {
     "name": "Breakout Room 1(Level 2)",
     "url_name": "room-1",
-    "output_stream": "room1-output",
+    "output_stream": "Room 1 - Output",
   },
   "Test Room": {
     "name": "Test Room",
@@ -112,11 +116,14 @@ Mixing in a room
  - **WEBSOCKET** `/room/<ROOM NAME>/watch`
    - This will provide a single point of contact for all state, note and stream changes.
    - **Message:** `config`
+     -
    - **Message:** `layout`
+     - Indicates the displayed streams and their display order - so that they are consistant.
    - **Message:** `notes`
      - A server-bound message can be sent(in the same format as to `note`) to create a new note.
-     - A client-bound message is sent when a note in this room is added, removed or modified.
+     - A client-bound message is sent when a note in this room is added, removed or modified. It contains the same content as **GET** `/room/<ROOM NAME>/notes`
    - **Message:** `state`
      - A server-bound message is sent to update the mixer's state(change video, audio, pip streams).
+     - A client-bound message is sent when another client makes a change to the mixer's state. It contains the same content as **GET** `/room/<ROOM NAME>/state`
    - **Message:** `streams`
      - A client-bound message is sent when stream information changes. See: **WEBSOCKET** `/streams/watch`.
