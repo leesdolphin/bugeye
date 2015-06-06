@@ -123,12 +123,12 @@ The notes URL contains meta data entered by the room operator about the talk.  T
 
 If several browsers connect to the same server during live editing they are all equivalent, and in particular they will all show an identical web page.  The URL below is provided so a browser can save it's layout so others can copy it. POST's to it have one field, called 'state'. GET's to it return whatever was last POST'ed to 'state'.  
 
-* POST /state - Saves the field 'state' (and it's mime type).
-* GET /state - Returns the field 'state' with it's associated mime type.
+* POST /**v1**/state - Saves the field 'state' (and it's mime type).
+* GET /**v1**/state - Returns the field 'state' with it's associated mime type.
 
 To avoid polling the browser can open a websocket to the server.  Once opened the server will send the URI's here if their contents have changed.  For example, if the mix has changed the URI */v1/mix* will be received on this web socket.
 
-* WEBSOCKET /notify
+* WEBSOCKET /**v1**/notify
 
 ## Post editing
 
@@ -144,7 +144,7 @@ Although the editing side of post editing is identical to live editing, it diffe
 
 They following URL returns the talks available for post-editing:
 
-* GET /talk-list.json
+* GET /**v1**/talk-list.json
 
 The following JSON structure.
 
@@ -209,7 +209,7 @@ The following JSON structure.
           ...
         }
 
-Editing is done entirely in browser.  To display the input feeds and the mixed output, the browser issues mixing instructions (ie uses the /mix url, setting all *use*'s) and then fetches media stream URL's (using the URL's returned by /config) in the same way as the live editing session.  However in the post editing session the browser must add parameters to the media URL's that select the room, date and starting position. It can also add parameters that effect the quality and hence bit rate of the feed, and also the playback speed.  All media URL's should be changed at the same time.   With the exception of the quality settings all parameters must be identical in all URL's.  Unlike the live editing session these mixing instructions are not recorded by the server, rather they are saved by the browser and sent back later.  The quality parameters only effect the display during the editing session.
+Editing is done entirely in browser.  To display the input feeds and the mixed output, the browser issues mixing instructions (ie uses the /mix url) and then fetches media stream URL's (using the URL's returned by /config) in the same way as the live editing session.  However in the post editing session the browser must add parameters to the media URL's that select the room, date and starting position. It can also add parameters that effect the quality and hence bit rate of the feed, and also the playback speed.  All media URL's should be changed at the same time.   With the exception of the quality settings all parameters must be identical in all URL's.  Unlike the live editing session these mixing instructions are not recorded by the server, rather they are saved by the browser and sent back later.  The quality parameters only effect the display during the editing session.
 
 - room=*room* the name of the room the feed is coming from.
 - day=*date* the day the live stream was captured.
@@ -221,7 +221,7 @@ Editing is done entirely in browser.  To display the input feeds and the mixed o
 
 Once the editing session is complete the browser posts the modified JSON block for the 'room\_date\_talk-id' back.  The 'post-mix' is sent as lines consisting of 'seconds-part-midnight /mix/....'.
 
-* POST /post-edit/room\_date\_talk-id
+* POST /**v1**/post-edit/room\_date\_talk-id
 
 # Lee <===> Russell
 
