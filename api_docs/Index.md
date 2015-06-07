@@ -18,8 +18,11 @@ Static files will be served under `://servername/static/` from the `static/`
 directory. Additionally `://servername/` and `://servername/index.html`
 serve `static/index.html`. Mime types will be guessed from the file name.
 
-Caching should be something considered, so it will probably be acomplished
-with HEAD and an ETag(of some description).
+Caching should be something to be considered, however this is really an
+implementation detail.
+
+Also to be considered is the possibility of performing some form of server-side
+templating, however this would be outside of the scope of the initial proposal.
 
 Some examples:
 
@@ -28,5 +31,3 @@ Some examples:
 
 Live Stream Mixing
 ------------------
-
-
