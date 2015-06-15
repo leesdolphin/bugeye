@@ -32,7 +32,7 @@ class ServeStaticRoute(web.StaticRoute):
     def handle(self, request):
         try:
             return (yield from super().handle(request))
-        except web.HTTPNotFound as e:
+        except web.HTTPNotFound:
             filename = request.match_info['filename']
             print("Accessing: ", filename, "; ", os.path.join(self._directory, filename))
             raise
@@ -127,7 +127,7 @@ class Streaming(object):
         print("Testing Stream: ", request, " || ", content_type, encoding)
         response.enable_chunked_encoding()
         response.content_type = content_type
-        response.
+        # response.
         response.start(request)
         yield from self.stream_file(open("bugeye/video.mp4", 'rb'), response, chunk_size)
         yield from response.write_eof()
@@ -182,6 +182,12 @@ def init(loop):
 
     streamer = Streaming()
     streamer.init_routes(app)
+
+    import bugeye.store as store
+    mixer = store.Mixer(None, None, None, None)
+
+    import bugeye.v1 as api_v1
+    yield from api_v1.init_api(loop, app, mixer)
 
     srv = yield from loop.create_server(app.make_handler(), '127.0.0.1', 8080)
     print("Server started at http://127.0.0.1:8080")

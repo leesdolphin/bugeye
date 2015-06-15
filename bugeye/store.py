@@ -75,7 +75,11 @@ class Mixer(object):
         Return the current feeds.  Format same as "set_feeds()".
 
         """
-        pass
+        return [
+            ('http://www.nope.com/a-video.mkv', 'av', 'output'),
+            None,
+            ('http://www.nope.com/a-video.mkv', 'audio', 'room mic'),
+        ]
 
     def set_mix(self, settings):
         """
