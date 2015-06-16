@@ -27,13 +27,14 @@ class BaseEndpoint(object):
         path = '/' + API_VERSION + path
         if 'name' in kwargs:
             kwargs['name'] = kwargs['name'] + '-' + API_VERSION
-        self._app.router.add_route(self, method, path, handler, **kwargs)
+        print(method, path, handler, kwargs)
+        self._app.router.add_route(method, path, handler, **kwargs)
 
     def _add_methods(self, method_handlers):
-        base_path = self.PATH
+        base_path = self.PATH.lstrip('/')
         for method, handler in method_handlers.items():
             name = method + "-" + base_path
-            self.__add_route(method, self.path, handler, name=name)
+            self.__add_route(method, "/" + base_path, handler, name=name)
 
     @property
     def path(self):
@@ -43,7 +44,7 @@ class BaseEndpoint(object):
 class NotifyEndpointMixin(BaseEndpoint):
 
     def __init__(self, loop, app, mixer):
-        super().__init__(self, loop, app, mixer)
+        super().__init__(loop, app, mixer)
         self._notifier = None
 
     @property
@@ -61,9 +62,6 @@ class NotifyEndpointMixin(BaseEndpoint):
         if not uri:
             uri = self.path
         self._loop.call_soon_threadsafe(self.notifier.notify, uri)
-
-
-
 
 
 class ConfigEndpoints(BaseEndpoint):
@@ -144,11 +142,12 @@ class NotifierEndpoint(BaseEndpoint):
 class MixEndpoint(NotifyEndpointMixin):
 
     PATH = '/mix'
-        # self._mixer_state = {'main': 1, 'audio': 2, 'pip': 0}
+    _mixer_state = {'main': 1, 'audio': 2, 'pip': 0}
 
     def init_routes(self):
         self._add_methods({
             'GET': self.get,
+            'POST': self.post,
          })
 
     @asyncio.coroutine
@@ -156,11 +155,17 @@ class MixEndpoint(NotifyEndpointMixin):
         return JsonResponse(self._mixer_state)
 
     @asyncio.coroutine
-    def post(self):
+    def post(self, request):
         self.notify_update()
 
 
 @asyncio.coroutine
 def init_api(loop, app, mixer):
-    cfg = ConfigEndpoints(loop, app, mixer)
-    cfg.init_routes()
+    args = [loop, app, mixer]
+    notify = NotifierEndpoint(*args)
+    cfg = ConfigEndpoints(*args)
+    mix = MixEndpoint(*args)
+    for endpoint in [notify, cfg, mix]:
+        endpoint.init_routes()
+    for endpoint in [mix]:
+        endpoint.notifier = notify
