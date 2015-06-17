@@ -7,6 +7,10 @@ import aiohttp
 
 dump_json = functools.partial(json.dumps, indent=4, sort_keys=True)
 
+def run_soon(loop, coroutine, *args):
+    def do_run():
+        loop.create_task(coroutine(*args))
+    loop.call_soon_threadsafe(do_run)
 
 class JsonResponse(web.Response):
 
@@ -18,7 +22,7 @@ class JsonResponse(web.Response):
 class BaseEndpoint(object):
 
     def __init__(self, loop, app, mixer):
-        self.loop = loop
+        self._loop = loop
         self._mixer = mixer
         self._app = app
 
@@ -61,7 +65,8 @@ class NotifyEndpointMixin(BaseEndpoint):
     def notify_update(self, uri=None):
         if not uri:
             uri = self.path
-        self._loop.call_soon_threadsafe(self.notifier.notify, uri)
+        print(dir(self))
+        run_soon(self._loop, self.notifier.notify, uri)
 
 
 class ConfigEndpoints(BaseEndpoint):
@@ -157,6 +162,7 @@ class MixEndpoint(NotifyEndpointMixin):
     @asyncio.coroutine
     def post(self, request):
         self.notify_update()
+        return web.Response()
 
 
 @asyncio.coroutine
