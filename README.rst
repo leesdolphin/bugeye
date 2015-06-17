@@ -59,10 +59,9 @@ start it.
 Use
 ---
 
+To run the server:
 .. code:: console
-
-    cd bugeye
-    python server.py
+    python3 -m bugeye.server
 
 Copyright and License
 ---------------------
