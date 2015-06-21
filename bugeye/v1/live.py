@@ -91,6 +91,7 @@ class ConfigEndpoints(BaseEndpoint):
             output.append(feed_out)
         return JsonResponse(output)
 
+
 class NotifyEndpoint(BaseEndpoint):
 
     PATH = '/notify'
@@ -204,6 +205,7 @@ class StateEndpoint(NotifiableEndpoint):
         self.content_type = request.content_type
         self.data = yield from request.read()
         return web.Response()
+
 
 @asyncio.coroutine
 def init_api(loop, app, mixer):

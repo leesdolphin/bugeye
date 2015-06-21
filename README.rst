@@ -69,7 +69,7 @@ Copyright and License
 Bugeye is Copyright (C) the respective authors of the files, as noted at the top
 of each file. If not noted, it is Copyright (C) 2015 Ryan Stuart. All original
 code in Bugeye is licensed under the `GNU Affero General Public License
-<http://scraper-helper.sourceforge.net/agpl-3.0.txt>`_.
+<http://www.gnu.org/licenses/agpl-3.0.txt>`_.
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the Free

@@ -13,7 +13,6 @@ _folder = './store'
 Replace spaces with - and then remove any non-path characters.
 """
 def pathify(name):
-
     return re.sub(r'[^0-9a-zA-Z\-_]', '', re.sub('\s+', '-', name))
 
 class Mixer(object):
@@ -98,6 +97,7 @@ class Mixer(object):
         :param settings:
         :return:
         """
+
         pass
 
 
