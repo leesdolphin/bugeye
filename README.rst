@@ -86,3 +86,18 @@ requirements to provide Corresponding Source.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+
+Items to Query
+--------------
+
+ - When does the server switch between live/post or is it running at the same
+ time?
+   - This is indicated by the Mixer recieving either a room name or None as
+     the first parameter. Therefore without fancy footwork on the server's part
+     1 server will either be in live OR post for it's lifetime without the
+     opportunity to change.
+
+ - Is it possible to stop an on_media call for a specific settings_id
+
+
